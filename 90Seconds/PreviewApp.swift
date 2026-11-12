@@ -21,7 +21,10 @@ struct PreviewApp: App {
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("About 90 seconds") {
-                    NSApp.orderFrontStandardAboutPanel(options: [.version: ""])
+                    let website = "https://triplestep.se/"
+                    let credits = NSMutableAttributedString(string: "Designed by Tomas Nilsson\n")
+                    credits.append(NSAttributedString(string: website, attributes: [.link: website]))
+                    NSApp.orderFrontStandardAboutPanel(options: [.version: "", .credits: credits])
                 }
             }
             DiagnosticsCommands()
