@@ -51,3 +51,13 @@ Go to the application menu -> View -> "Enable debugging window"
 # Deep dive logging
 /usr/bin/log stream --level info --predicate 'process == "90 seconds"'
 ```
+
+## Building
+
+```bash
+# Create the application inside the "Dist" folder
+./build
+
+# Internal use; creates a tag on main branch which in turn will produce a new release on github
+./release.sh
+```
