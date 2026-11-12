@@ -1,6 +1,10 @@
 # 90 Seconds
 
-## Playback workflow
+##
+
+![7 second demo](animation.gif)
+
+## Internal workflow
 
 ```mermaid
 swimlane-beta LR
