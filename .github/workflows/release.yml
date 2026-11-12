@@ -1,0 +1,35 @@
+name: Build and release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: app-release-${{ github.ref }}
+  queue: max
+
+jobs:
+  release:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Build the macOS app
+        run: |
+          xcodebuild -project 90Seconds.xcodeproj -scheme 90Seconds \
+            -configuration Release -derivedDataPath "$PWD/.build" \
+            CONFIGURATION_BUILD_DIR="$PWD/dist" \
+            CODE_SIGN_IDENTITY=- ONLY_ACTIVE_ARCH=NO "ARCHS=arm64 x86_64" build
+      - name: Package the macOS app
+        run: |
+          codesign --verify --strict "dist/90 seconds.app"
+          ditto -c -k --keepParent "dist/90 seconds.app" "dist/90-seconds.zip"
+      - name: Publish a new app version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "dist/90-seconds.zip" --verify-tag --generate-notes
